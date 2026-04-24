@@ -3,12 +3,12 @@ const router = express.Router()
 const User = require("../schema/userSchema.js")
 
 // Login
-router.post("/login", async (req, res) => {
+router.post("/register", async (req, res) => {
     try {
         await User.create(req.body)
         res.status(200).json({
+            message: "Regiter successfully",
             status: true,
-            message: "Login successfully"
         })
     } catch (error) {
         res.status(500).json({
@@ -19,15 +19,19 @@ router.post("/login", async (req, res) => {
 })
 
 // Register
-router.post("/register", async (req, res) => {
+router.post("/login", async (req, res) => {
     try {
-        const FindUser = await User.find()
-        const CheckUser = FindUser.find(user => user.email === req.body.email)
-        if (!CheckUser) {
+        const FindUser = await User.find(user => user.email === req.body.email)
+        if (!FindUser) {
             res.status(200).json({
                 status: true,
-                message: "Regiter successfully",
-                data: CheckUser
+                message: "Login successfully",
+                data: FindUser
+            })
+        } else {
+            res.status(200).json({
+                status: true,
+                message: "Login Faild"
             })
         }
     } catch (error) {
@@ -47,6 +51,11 @@ router.put("/edited/:id", async (req, res) => {
                 status: true,
                 message: "Account updated",
                 data: update
+            })
+        } else {
+            res.status(200).json({
+                status: true,
+                message: "Account cant updated"
             })
         }
     } catch (error) {
